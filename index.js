@@ -29,10 +29,16 @@ console.log(processFirstItem(['foo','bar'],function(str){return str+str}));
   
   1. What is the difference between counter1 and counter2?
   
+  -Counter1 accesses the count variable with block scope inside of a function, creating a closure, while the count variable in counter2 lies outside of the function and is accessible because it has global scope.
+  
   2. Which of the two uses a closure? How can you tell?
   
+  -Counter1 uses a closure because it contains an inner function which reaches into the outer function that contains the count variable.
+
   3. In what scenario would the counter1 code be preferable? In what scenario would 
      counter2 be better?  
+
+     -Counter1 would be preferable if the count variable only needed to be used in this specific function and not by other functions in the program.  Counter2 would be better if the count variable requires global scope.
 */
 
 // counter1 code
@@ -44,6 +50,13 @@ function counterMaker() {
 }
 
 const counter1 = counterMaker();
+// console.log(counter1())
+// console.log(counter1())
+// console.log(counter1())
+// console.log(counter1())
+
+
+
 
 // counter2 code
 let count = 0;
@@ -51,6 +64,12 @@ let count = 0;
 function counter2() {
   return count++;
 }
+// console.log(counter2())
+// console.log(counter2())
+// console.log(counter2())
+// console.log(counter2())
+// console.log(counter2())
+
 
 
 /* ⚾️⚾️⚾️ Task 2: inning() ⚾️⚾️⚾️
@@ -62,9 +81,11 @@ Use the inning function below to do the following:
 NOTE: This will be a callback function for the tasks below
 */
 
-function inning(/*Code Here*/){
-    /*Code Here*/
+function inning(){
+  return Math.floor(Math.random() * 3);
 }
+
+// console.log(inning());
 
 
 /* ⚾️⚾️⚾️ Task 3: finalScore() ⚾️⚾️⚾️
@@ -81,18 +102,35 @@ Use the finalScore function below to do the following:
 }
 */ 
 
-function finalScore(/*code Here*/){
-  /*Code Here*/
+function finalScore(inningcb, inningsNum){
+  const finalScore = {}
+  let homeScore = 0;
+  let awayScore = 0;
+
+  for(let i = 0; i < inningsNum; i++){
+    homeScore += inningcb();
+    awayScore += inningcb();
+    finalScore.Home = homeScore;
+    finalScore.Away = awayScore;
+  }
+  return finalScore
 }
+
+// console.log(finalScore(inning, 9));
 
 /* ⚾️⚾️⚾️ Task 4: getInningScore() ⚾️⚾️⚾️
 Use the getInningScore() function below to do the following:
   1. Receive a callback function - you will pass in the inning function from task 2 as your argument 
   2. Return an object with a score for home and a score for away that populates from invoking the inning callback function */
 
-function getInningScore(/*Your Code Here */) {
-  /*Your Code Here */
+function getInningScore(inningcb) {
+  return{
+    Home: inningcb(),
+    Away: inningcb()
+  }
 }
+
+console.log(getInningScore(inning));
 
 
 /* ⚾️⚾️⚾️ Task 5: scoreboard() ⚾️⚾️⚾️
@@ -101,7 +139,7 @@ Use the scoreboard function below to do the following:
   2. Receive the callback function `inning` from Task 2
   3. Receive a number of innings to be played
   4. Return an array where each of it's index values equals a string stating the
-  Home and Away team's scores for each inning.  Not the cummulative score.
+  Home and Away team's scores for each inning.  Not the cumulative score.
   5. If there's a tie at the end of the innings, add this message containing the score to the end of the array:  "This game will require extra innings: Away 12 - Home 12"  (see tie example below)
      If there isn't a tie, add this message to the end of the array: "Final Score: Away 13 - Home 11"  (see no tie example below)
   
@@ -136,10 +174,16 @@ Use the scoreboard function below to do the following:
 ]  
   */
 
-function scoreboard(/* CODE HERE */) {
-  /* CODE HERE */
+function scoreboard(getInningScoreCb, inningcb,inningsNum) {
+  const finalScoreboard = [];
+
+  for(let i = 0; i < inningsNum; i++){
+    finalScoreboard.push(`Inning ${i + 1}: Away ${getInningScore(inningcb).Away} - Home ${getInningScore(inningcb).Home}`)
+  }
+  return finalScoreboard
 }
 
+console.log(scoreboard(getInningScore, inning, 9));
 
 
 
